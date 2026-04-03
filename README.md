@@ -1,6 +1,6 @@
 # Lesson_Problem_Web
 
-> **Trang web tính điểm kiểu DOJ** – Chấm điểm bài tập lập trình theo kiểu Online Judge (OJ)
+> **Trang web tính điểm kiểu DOJ** – Chấm điểm bài tập lập trình theo kiểu Dynamic Online Judge
 
 ---
 
@@ -57,7 +57,7 @@ Lesson_Problem_Web/
 |---|---|
 | **HTML5 / CSS3** | Giao diện người dùng / UI layout & styling |
 | **JavaScript (ES6+)** | Logic phía client / Client-side logic |
-| **Vue.js / React / Svelte** | Framework frontend (tuỳ chọn / optional) |
+| **Vue.js** | Framework frontend chính / Main frontend framework |
 | **Vite** | Build tool & dev server nhanh / Fast build & dev server |
 | **Node.js + npm** | Quản lý dependencies / Dependency management |
 | **REST API / WebSocket** | Giao tiếp với backend chấm bài / Judge backend communication |
@@ -68,7 +68,7 @@ Lesson_Problem_Web/
 
 ### Yêu cầu / Prerequisites
 
-- [Node.js](https://nodejs.org/) phiên bản **18+** (hoặc LTS mới nhất)
+- [Node.js](https://nodejs.org/) phiên bản **LTS** (khuyến nghị 20+ hoặc mới nhất)
 - npm (đi kèm Node.js) hoặc [yarn](https://yarnpkg.com/)
 - Git
 
