@@ -29,6 +29,17 @@
 
 Hệ thống cung cấp trải nghiệm tương tác thời gian thực cao độ, bảo mật chặt chẽ thông qua kiến trúc Client-Server hiện đại, đáp ứng tốt cho các Câu lạc bộ học thuật hoặc quy mô lớp học đại học.
 
+## ✨ Tính năng chính
+
+| Phân hệ | Tính năng nổi bật |
+|-----------|-------|
+| 🎓 **Học tập & Bài giảng** | Danh sách bài giảng, xem chi tiết lý thuyết và tài liệu đính kèm. |
+| 💻 **Luyện tập Thuật toán** | Đọc đề bài, viết code, nộp bài và xem lịch sử trạng thái (Pending, Accepted, WA). |
+| 🏆 **Đấu trường (Contest)** | Tham gia kỳ thi ảo có tính giờ, cập nhật thứ hạng theo thời gian thực. |
+| 👥 **Hồ sơ & Tương tác** | Khung chat trực tuyến, lịch sử hoạt động, bảng thành tựu cá nhân. |
+| ⚙️ **Quản trị (Admin)** | Toàn quyền thêm/sửa/xóa User, Problem, Lecture và Contest. |
+| 🔐 **Bảo mật (Supabase)** | Xác thực an toàn, phân quyền rõ ràng giữa User và Admin (Row Level Security). |
+
 ---
 
 ## 2. NGĂN XẾP CÔNG NGHỆ
@@ -71,6 +82,128 @@ Dự án được xây dựng trên bộ khung công nghệ hiệu suất cao:
 Hệ thống giao tiếp qua 2 luồng chính:
 1. **Frontend <-> Supabase:** Hầu hết các thao tác đọc/ghi dữ liệu thông thường (lấy danh sách bài tập, lịch sử học tập) và xác thực người dùng được Frontend gọi trực tiếp đến Supabase thông qua `supabaseClient.ts`. Điều này giảm tải cho backend tự xây.
 2. **Frontend <-> Node.js Backend:** Các tác vụ đòi hỏi bảo mật cao hoặc tốn tài nguyên (như gửi code đi chấm tự động qua một compiler thứ 3, xử lý logic nghiệp vụ phức tạp) sẽ được đẩy về `backend/index.js` xử lý.
+## 🏗️ Kiến trúc hệ thống
+
+```text
+┌─────────────────────────────────────────────────────┐
+│                 FRONTEND LAYER (Client)             │
+│  Giao diện ReactJS + TypeScript (Chạy trên Vite)    │
+└────────────────────┬────────────────────────────────┘
+                     │ HTTP / REST / WebSocket
+┌────────────────────▼────────────────────────────────┐
+│                 BACKEND LAYER (Server)              │
+│  Node.js xử lý logic nghiệp vụ, proxy API, và       │
+│  điều phối hệ thống chấm code (Judge)               │
+└──────┬──────────────────────────────────┬────────────┘
+       │ Trực tiếp lấy dữ liệu (Supabase) │ Truy vấn bảo mật
+┌──────▼──────┐                 ┌─────────▼──────────┐
+│   BaaS API  │                 │ Database & Storage │
+│ (Supabase   │                 │   (PostgreSQL)     │
+│ Client TS)  │                 │ - Lưu trữ dữ liệu  │
+│ - Xác thực  │                 │ - Row Level Sec.   │
+└─────────────┘                 └────────────────────┘
+```
+
+---
+## 📦 Yêu cầu cài đặt
+
+### Phần mềm bắt buộc
+
+| Phần mềm | Phiên bản | Link |
+|----------|-----------|------|
+| Node.js | ≥ 18.x (LTS) | [nodejs.org](https://nodejs.org/) |
+| Git | Mới nhất | [git-scm.com](https://git-scm.com/) |
+
+### Nền tảng Đám mây
+* Một dự án **Supabase** đang hoạt động (Project URL & Anon Key).
+
+---
+
+## 🚀 Hướng dẫn cài đặt
+
+### Bước 1: Lấy mã nguồn
+
+```bash
+git clone https://github.com/endenko/Lesson_Problem_Web.git
+cd Lesson_Problem_Web
+```
+
+### Bước 2: Thiết lập Backend
+
+```bash
+cd backend
+npm install
+```
+
+### Bước 3: Thiết lập Frontend
+
+Mở một Terminal khác:
+```bash
+cd frontend
+npm install
+```
+
+### Bước 4: Khởi tạo Cơ sở dữ liệu
+
+1. Truy cập trang quản trị dự án Supabase của bạn.
+2. Mở mục **SQL Editor**.
+3. Sao chép toàn bộ mã lệnh trong tệp `frontend/database.sql` và chạy (Run) để tự động tạo các bảng và thiết lập quyền.
+
+---
+
+## ⚙️ Cấu hình hệ thống
+
+Bạn cần thiết lập biến môi trường để kết nối các phân hệ:
+
+### 1. Cấu hình Frontend
+Tạo tệp `.env.local` trong thư mục `frontend`:
+```env
+VITE_SUPABASE_URL=https://<your-project-id>.supabase.co
+VITE_SUPABASE_ANON_KEY=<your-anon-key>
+```
+
+### 2. Cấu hình Backend
+Tạo tệp `.env` trong thư mục `backend`:
+```env
+PORT=5000
+# Thêm các biến bảo mật khác của Node.js tại đây
+```
+
+---
+
+## 📖 Cách sử dụng
+
+### 1. Bắt đầu Máy chủ Backend
+```bash
+cd backend
+npm start
+```
+> Máy chủ sẽ lắng nghe các yêu cầu tại cổng 5000.
+
+### 2. Bắt đầu Giao diện Frontend
+```bash
+cd frontend
+npm run dev
+```
+> Hệ thống Vite sẽ khởi chạy ứng dụng (thường ở địa chỉ `http://localhost:5173`).
+
+### 3. Phân quyền Quản trị
+Để truy cập vào các giao diện Admin (`ManageUsers`, `ManageProblems`...), bạn cần đăng nhập bằng một tài khoản đã được thiết lập quyền `admin` bên trong cơ sở dữ liệu Supabase.
+
+---
+
+## 🔌 API Reference
+
+### Module: `supabaseClient.ts`
+Chịu trách nhiệm khởi tạo kết nối từ Frontend đến CSDL.
+
+| Tính năng | Phương thức / Logic |
+|-----------|---------------------|
+| `Authentication` | Sử dụng `supabase.auth.signUp()` và `signInWithPassword()`. |
+| `Data Fetching` | Gọi trực tiếp qua Client: `supabase.from('problems').select('*')`. |
+
+### Module: Backend Node.js
+Chịu trách nhiệm cho các tác vụ không thể xử lý ở Frontend. Tùy thuộc vào thiết lập trong `index.js`, máy chủ này sẽ xử lý các REST API liên quan đến hệ thống chấm bài hoặc xác thực cấp cao.
 
 ---
 
